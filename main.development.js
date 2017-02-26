@@ -1,5 +1,4 @@
 import { app, BrowserWindow, Menu, crashReporter, shell } from 'electron';
-import './databases';
 
 let menu;
 let template;

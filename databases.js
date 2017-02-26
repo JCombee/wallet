@@ -1,23 +1,23 @@
-import Datastore from 'nedb'
-import fs from 'fs'
+import Datastore from 'nedb';
+import fs from 'fs';
 
-const dir = `${getDataDir()}/WhereDidMyMoneyGo`
+const dir = `${getDataDir()}/WhereDidMyMoneyGo`;
 
 if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir)
+  fs.mkdirSync(dir);
 }
 
 global.db = {
   transactions: initDb('transactions'),
   bankAccounts: initDb('bankAccounts'),
   transactionsQueue: initDb('transactionsQueue')
+};
+
+function initDb(dbName) {
+  return new Datastore({ filename: `${dir}/${dbName}` });
 }
 
-function initDb (dbName) {
-  return new Datastore({ filename: `${dir}/${dbName}` })
-}
-
-function getDataDir () {
+function getDataDir() {
   if (fs.existsSync(process.env)) {
     return `${process.env.APPDATA}`;
   }

@@ -1,7 +1,6 @@
-import { remote } from 'electron';
 import Promise from 'es6-promise';
 
-const bankAccounts = remote.getGlobal('db').bankAccounts;
+const bankAccounts = global.db.bankAccounts;
 
 export default {
   load,

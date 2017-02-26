@@ -1,7 +1,6 @@
-import { remote } from 'electron';
 import Promise from 'es6-promise';
 
-const transactionsQueue = remote.getGlobal('db').transactionsQueue;
+const transactionsQueue = global.db.transactionsQueue;
 
 export default {
   load,
@@ -9,7 +8,7 @@ export default {
   store
 };
 
-function load () {
+function load() {
   return new Promise((resolve, reject) => {
     transactionsQueue.loadDatabase(err => {
       if (err) {
@@ -20,11 +19,9 @@ function load () {
   });
 }
 
-function create (transaction) {
+function create(transaction) {
   return new Promise((resolve, reject) => {
-    console.log(1)
     transactionsQueue.insert(transaction, (err, newTransaction) => {
-      console.log(2, err, newTransaction)
       if (err) {
         return reject(err);
       }
@@ -33,7 +30,7 @@ function create (transaction) {
   });
 }
 
-function store () {
+function store() {
   return new Promise(resolve => {
     transactionsQueue.persistence.compactDatafile();
     resolve();

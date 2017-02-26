@@ -1,8 +1,7 @@
-import { remote } from 'electron';
 import Promise from 'es6-promise';
 import { hashObjectByAttr } from './../utils/hash';
 
-const transactions = remote.getGlobal('db').transactions;
+const transactions = global.db.transactions;
 
 export default {
   load,
@@ -10,7 +9,7 @@ export default {
   store
 };
 
-function load () {
+function load() {
   return new Promise((resolve, reject) => {
     transactions.loadDatabase(err => {
       if (err) {
@@ -21,7 +20,7 @@ function load () {
   });
 }
 
-function findOne (transactions) {
+function findOne(transactions) {
   return new Promise((resolve, reject) => {
     transactions.findOne(transactions, (err, newTransactions) => {
       if (err) {
@@ -32,8 +31,8 @@ function findOne (transactions) {
   });
 }
 
-function create (transaction) {
-  transaction.hash = hashObjectByAttr(transaction)
+function create(transaction) {
+  transaction.hash = hashObjectByAttr(transaction);
   return new Promise((resolve, reject) => {
     transaction.insert(transaction, (err, newTransactions) => {
       if (err) {
@@ -44,8 +43,8 @@ function create (transaction) {
   });
 }
 
-function updateOrCreate (transaction) {
-  transaction.hash = hashObjectByAttr(transaction)
+function updateOrCreate(transaction) {
+  transaction.hash = hashObjectByAttr(transaction);
   return new Promise((resolve, reject) => {
     findOne({ hash: transaction.hash }).then(oldTransactions => {
       if (!oldTransactions) {
@@ -56,7 +55,7 @@ function updateOrCreate (transaction) {
   });
 }
 
-function store () {
+function store() {
   return new Promise(resolve => {
     transactions.persistence.compactDatafile();
     resolve();

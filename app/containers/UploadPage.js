@@ -6,7 +6,8 @@ import { submitFile } from './../actions/file';
 class UploadPage extends Component {
   render() {
     return (<form
-      onSubmit={() => {
+      onSubmit={(e) => {
+        e.preventDefault();
         this.props.submitFile(this.refs.file.files[0]);
       }}
     >
