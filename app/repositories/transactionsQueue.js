@@ -1,7 +1,7 @@
 import { remote } from 'electron';
 import Promise from 'es6-promise';
 
-const bankAccounts = remote.getGlobal('db').transactionsQueue;
+const transactionsQueue = remote.getGlobal('db').transactionsQueue;
 
 export default {
   load,
@@ -11,7 +11,7 @@ export default {
 
 function load () {
   return new Promise((resolve, reject) => {
-    bankAccounts.loadDatabase(err => {
+    transactionsQueue.loadDatabase(err => {
       if (err) {
         return reject(err);
       }
@@ -20,20 +20,22 @@ function load () {
   });
 }
 
-function create (bankAccount) {
+function create (transaction) {
   return new Promise((resolve, reject) => {
-    bankAccounts.insert(bankAccount, (err, newBankAccount) => {
+    console.log(1)
+    transactionsQueue.insert(transaction, (err, newTransaction) => {
+      console.log(2, err, newTransaction)
       if (err) {
-        reject(err);
+        return reject(err);
       }
-      resolve(newBankAccount);
+      resolve(newTransaction);
     });
   });
 }
 
 function store () {
   return new Promise(resolve => {
-    bankAccounts.persistence.compactDatafile();
+    transactionsQueue.persistence.compactDatafile();
     resolve();
   });
 }

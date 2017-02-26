@@ -7,7 +7,8 @@ const parser = new TransactionParser;
 
 parser.file = csv;
 
-parser.ownerIban = t => t[0];
-parser.currency = t => t[1];
+parser.inputHash = t => t.join(' ');
+parser.account = t => t[ 0 ];
+parser.currency = t => t[ 1 ];
 
 export default parser;
