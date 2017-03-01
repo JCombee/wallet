@@ -19,7 +19,6 @@ class UploadPage extends Component {
 
 const mapDispatchToProps = dispatch => ({
   submitFile: file => {
-    console.log(file);
     dispatch(submitFile(file));
   }
 });

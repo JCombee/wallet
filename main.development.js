@@ -1,10 +1,12 @@
-import { app, BrowserWindow, Menu, crashReporter, shell } from 'electron';
+import { app, BrowserWindow, Menu, crashReporter, shell, ipcMain } from 'electron';
+import './databases'
+import submitFile from './server/controllers/file'
 
 let menu;
 let template;
 let mainWindow = null;
 
-crashReporter.start();
+// crashReporter.start();
 
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')();
@@ -39,9 +41,9 @@ app.on('ready', () => {
   }
 
   if (process.platform === 'darwin') {
-    template = [{
+    template = [ {
       label: 'Electron',
-      submenu: [{
+      submenu: [ {
         label: 'About ElectronReact',
         selector: 'orderFrontStandardAboutPanel:'
       }, {
@@ -70,10 +72,10 @@ app.on('ready', () => {
         click() {
           app.quit();
         }
-      }]
+      } ]
     }, {
       label: 'Edit',
-      submenu: [{
+      submenu: [ {
         label: 'Undo',
         accelerator: 'Command+Z',
         selector: 'undo:'
@@ -99,37 +101,37 @@ app.on('ready', () => {
         label: 'Select All',
         accelerator: 'Command+A',
         selector: 'selectAll:'
-      }]
+      } ]
     }, {
       label: 'View',
-      submenu: (process.env.NODE_ENV === 'development') ? [{
-        label: 'Reload',
-        accelerator: 'Command+R',
-        click() {
-          mainWindow.restart();
-        }
-      }, {
-        label: 'Toggle Full Screen',
-        accelerator: 'Ctrl+Command+F',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
-        }
-      }, {
-        label: 'Toggle Developer Tools',
-        accelerator: 'Alt+Command+I',
-        click() {
-          mainWindow.toggleDevTools();
-        }
-      }] : [{
-        label: 'Toggle Full Screen',
-        accelerator: 'Ctrl+Command+F',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
-        }
-      }]
+      submenu: (process.env.NODE_ENV === 'development') ? [ {
+          label: 'Reload',
+          accelerator: 'Command+R',
+          click() {
+            mainWindow.restart();
+          }
+        }, {
+          label: 'Toggle Full Screen',
+          accelerator: 'Ctrl+Command+F',
+          click() {
+            mainWindow.setFullScreen(!mainWindow.isFullScreen());
+          }
+        }, {
+          label: 'Toggle Developer Tools',
+          accelerator: 'Alt+Command+I',
+          click() {
+            mainWindow.toggleDevTools();
+          }
+        } ] : [ {
+          label: 'Toggle Full Screen',
+          accelerator: 'Ctrl+Command+F',
+          click() {
+            mainWindow.setFullScreen(!mainWindow.isFullScreen());
+          }
+        } ]
     }, {
       label: 'Window',
-      submenu: [{
+      submenu: [ {
         label: 'Minimize',
         accelerator: 'Command+M',
         selector: 'performMiniaturize:'
@@ -142,10 +144,10 @@ app.on('ready', () => {
       }, {
         label: 'Bring All to Front',
         selector: 'arrangeInFront:'
-      }]
+      } ]
     }, {
       label: 'Help',
-      submenu: [{
+      submenu: [ {
         label: 'Learn More',
         click() {
           shell.openExternal('http://electron.atom.io');
@@ -165,15 +167,15 @@ app.on('ready', () => {
         click() {
           shell.openExternal('https://github.com/atom/electron/issues');
         }
-      }]
-    }];
+      } ]
+    } ];
 
     menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
   } else {
-    template = [{
+    template = [ {
       label: '&File',
-      submenu: [{
+      submenu: [ {
         label: '&Open',
         accelerator: 'Ctrl+O'
       }, {
@@ -182,37 +184,37 @@ app.on('ready', () => {
         click() {
           mainWindow.close();
         }
-      }]
+      } ]
     }, {
       label: '&View',
-      submenu: (process.env.NODE_ENV === 'development') ? [{
-        label: '&Reload',
-        accelerator: 'Ctrl+R',
-        click() {
-          mainWindow.restart();
-        }
-      }, {
-        label: 'Toggle &Full Screen',
-        accelerator: 'F11',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
-        }
-      }, {
-        label: 'Toggle &Developer Tools',
-        accelerator: 'Alt+Ctrl+I',
-        click() {
-          mainWindow.toggleDevTools();
-        }
-      }] : [{
-        label: 'Toggle &Full Screen',
-        accelerator: 'F11',
-        click() {
-          mainWindow.setFullScreen(!mainWindow.isFullScreen());
-        }
-      }]
+      submenu: (process.env.NODE_ENV === 'development') ? [ {
+          label: '&Reload',
+          accelerator: 'Ctrl+R',
+          click() {
+            mainWindow.restart();
+          }
+        }, {
+          label: 'Toggle &Full Screen',
+          accelerator: 'F11',
+          click() {
+            mainWindow.setFullScreen(!mainWindow.isFullScreen());
+          }
+        }, {
+          label: 'Toggle &Developer Tools',
+          accelerator: 'Alt+Ctrl+I',
+          click() {
+            mainWindow.toggleDevTools();
+          }
+        } ] : [ {
+          label: 'Toggle &Full Screen',
+          accelerator: 'F11',
+          click() {
+            mainWindow.setFullScreen(!mainWindow.isFullScreen());
+          }
+        } ]
     }, {
       label: 'Help',
-      submenu: [{
+      submenu: [ {
         label: 'Learn More',
         click() {
           shell.openExternal('http://electron.atom.io');
@@ -232,9 +234,10 @@ app.on('ready', () => {
         click() {
           shell.openExternal('https://github.com/atom/electron/issues');
         }
-      }]
-    }];
+      } ]
+    } ];
     menu = Menu.buildFromTemplate(template);
     mainWindow.setMenu(menu);
+    ipcMain.on('submit-file', submitFile);
   }
 });

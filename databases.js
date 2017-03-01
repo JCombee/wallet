@@ -10,14 +10,15 @@ if (!fs.existsSync(dir)) {
 global.db = {
   transactions: initDb('transactions'),
   bankAccounts: initDb('bankAccounts'),
+  bankAccountsQueue: initDb('bankAccountsQueue'),
   transactionsQueue: initDb('transactionsQueue')
 };
 
-function initDb(dbName) {
+function initDb (dbName) {
   return new Datastore({ filename: `${dir}/${dbName}` });
 }
 
-function getDataDir() {
+function getDataDir () {
   if (fs.existsSync(process.env)) {
     return `${process.env.APPDATA}`;
   }

@@ -1,15 +1,8 @@
-import fetch from 'isomorphic-fetch';
+import { ipcRenderer } from 'electron';
 
-export function submitFile(file) {
+export function submitFile (file) {
   const filePath = file.path;
-  const body = JSON.stringify({ filePath });
-  fetch('http://localhost:3000/file', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body
-  });
+  ipcRenderer.send('submit-file', filePath);
   return {
     type: 'test'
   };

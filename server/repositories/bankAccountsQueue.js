@@ -1,17 +1,18 @@
 import Promise from 'es6-promise';
 
-const bankAccounts = global.db.bankAccounts;
+const bankAccountsQueue = global.db.bankAccountsQueue;
 
 export default {
   load,
-  findOne,
+  all,
   updateOrCreate,
+  remove,
   store
 };
 
 function load () {
   return new Promise((resolve, reject) => {
-    bankAccounts.loadDatabase(err => {
+    bankAccountsQueue.loadDatabase(err => {
       if (err) {
         return reject(err);
       }
@@ -20,9 +21,20 @@ function load () {
   });
 }
 
+function all () {
+  return new Promise((resolve, reject) => {
+    bankAccountsQueue.find({}, (err, bankAccounts) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(bankAccounts);
+    });
+  });
+}
+
 function findOne (bankAccount) {
   return new Promise((resolve, reject) => {
-    bankAccounts.findOne(bankAccount, (err, newBankAccount) => {
+    bankAccountsQueue.findOne(bankAccount, (err, newBankAccount) => {
       if (err) {
         return reject(err);
       }
@@ -33,7 +45,7 @@ function findOne (bankAccount) {
 
 function create (bankAccount) {
   return new Promise((resolve, reject) => {
-    bankAccounts.insert(bankAccount, (err, newBankAccount) => {
+    bankAccountsQueue.insert(bankAccount, (err, newBankAccount) => {
       if (err) {
         reject(err);
       }
@@ -53,9 +65,20 @@ function updateOrCreate (bankAccount) {
   });
 }
 
+function remove (query) {
+  return new Promise((resolve, reject) => {
+    bankAccountsQueue.remove(query, (err, numRemoved) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(numRemoved);
+    });
+  });
+}
+
 function store () {
   return new Promise(resolve => {
-    bankAccounts.persistence.compactDatafile();
+    bankAccountsQueue.persistence.compactDatafile();
     resolve();
   });
 }
