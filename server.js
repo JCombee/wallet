@@ -1,6 +1,5 @@
 /* eslint no-console: 0 */
 
-import './databases';
 import express from 'express';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';

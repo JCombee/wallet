@@ -21,16 +21,11 @@ function load () {
 }
 
 function find (query) {
-  console.log(41)
   return new Promise((resolve, reject) => {
-    console.log(42)
     transactions.find(query, (err, newTransactions) => {
-      console.log(43)
       if (err) {
-        console.log(44)
         return reject(err);
       }
-      console.log(45)
       resolve(newTransactions);
     });
   });

@@ -4,7 +4,6 @@ import { ACTIONS } from './../../constants/db';
 export function init() {
   return dispatch => {
     dispatch(startInitialization());
-    console.log();
     dispatch(finishedInitialization());
   };
 }
