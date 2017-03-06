@@ -16,8 +16,7 @@ export default function () {
             }
 
             bankAccountsRepository.updateOrCreate(bankAccount).then(() => {
-              bankAccountsQueueRepository.remove({ _id: bankAccount._id })
-              forEachBankAccount(bankAccounts, i + 1)
+              bankAccountsQueueRepository.remove({ _id: bankAccount._id }).then(() => forEachBankAccount(bankAccounts, i + 1))
             })
           }
 

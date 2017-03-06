@@ -1,3 +1,4 @@
+import {ipcRenderer} from 'electron'
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
@@ -16,3 +17,5 @@ render(
   </Provider>,
   document.getElementById('root')
 );
+
+ipcRenderer.on('get-transactions-queue', () => {alert()})

@@ -238,6 +238,7 @@ app.on('ready', () => {
     } ];
     menu = Menu.buildFromTemplate(template);
     mainWindow.setMenu(menu);
+    global.mainWindow = mainWindow
   }
 
   ipcMain.on('submit-file', submitFile);
