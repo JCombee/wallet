@@ -7,6 +7,7 @@ export default {
   create,
   remove,
   all,
+  last,
   store
 };
 
@@ -33,16 +34,11 @@ function create (transaction) {
 }
 
 function remove (query) {
-  console.log(31)
   return new Promise((resolve, reject) => {
-    console.log(32)
     transactionsQueue.remove(query, (err, numRemoved) => {
-      console.log(33)
       if (err) {
-        console.log(34)
         return reject(err);
       }
-      console.log(35)
       resolve(numRemoved);
     });
   });
@@ -54,6 +50,18 @@ function all () {
       if (err) {
         return reject(err);
       }
+      resolve(transactions);
+    });
+  });
+}
+
+function last (ammount) {
+  return new Promise((resolve, reject) => {
+    transactionsQueue.find({}, (err, transactions) => {
+      if (err) {
+        return reject(err);
+      }
+      transactions.splice(ammount);
       resolve(transactions);
     });
   });

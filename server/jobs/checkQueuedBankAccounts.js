@@ -7,6 +7,7 @@ export default function () {
     bankAccountsQueueRepository.load().then(() => {
       bankAccountsRepository.load().then(() => {
         bankAccountsQueueRepository.all().then(bankAccounts => {
+          console.log('bankAccounts', bankAccounts.length)
           function forEachBankAccount (bankAccounts, i = 0) {
             const bankAccount = bankAccounts[ i ]
             if (!bankAccount) {

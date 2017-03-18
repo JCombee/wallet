@@ -1,4 +1,3 @@
-import {ipcRenderer} from 'electron'
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
@@ -7,9 +6,12 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import routes from './routes';
 import configureStore from './store/configureStore';
 import './app.global.css';
+import ipc from './ipc'
 
 const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);
+
+ipc(store)
 
 render(
   <Provider store={store}>
@@ -17,5 +19,3 @@ render(
   </Provider>,
   document.getElementById('root')
 );
-
-ipcRenderer.on('get-transactions-queue', () => {alert()})

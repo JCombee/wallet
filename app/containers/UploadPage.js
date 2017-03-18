@@ -2,9 +2,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { submitFile } from './../actions/file';
+import TransactionsQueue from './TransactionsQueue';
 
 class UploadPage extends Component {
-  render() {
+  render () {
     return (<form
       onSubmit={(e) => {
         e.preventDefault();
@@ -13,6 +14,7 @@ class UploadPage extends Component {
     >
       <input type="file" ref="file" />
       <input type="submit" />
+      <TransactionsQueue />
     </form>);
   }
 }

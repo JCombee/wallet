@@ -9,6 +9,7 @@ export default function () {
       transactionsRepository.load().then(() => {
         bankAccountsRepository.load().then(() => {
           transactionsQueueRepository.all().then(transactions => {
+            console.log('transactions', transactions.length)
             function forEachTransaction (transactionsQueued, i = 0) {
               const transaction = transactionsQueued[ i ]
               if (!transaction) {

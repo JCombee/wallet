@@ -1,3 +1,8 @@
+import GET from './../../constants/get'
+import transactionsQueue from './../repositories/transactionsQueue'
+
 export default function () {
-  global.mainWindow.ipcRenderer.send('get-transactions-queue', transactionsQueue)
+  transactionsQueue.last(10).then((transactions) => {
+    global.mainWindow.send(GET.TRANSACTIONS_QUEUE_RECEIVE, transactions)
+  })
 }

@@ -1,6 +1,8 @@
 import { app, BrowserWindow, Menu, crashReporter, shell, ipcMain } from 'electron';
 import './databases'
-import submitFile from './server/controllers/file'
+import initServer from './server/ipc'
+
+initServer();
 
 let menu;
 let template;
@@ -240,6 +242,4 @@ app.on('ready', () => {
     mainWindow.setMenu(menu);
     global.mainWindow = mainWindow
   }
-
-  ipcMain.on('submit-file', submitFile);
 });

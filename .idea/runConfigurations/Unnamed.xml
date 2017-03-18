@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Unnamed" type="mocha-javascript-test-runner" factoryName="Mocha">
+    <node-interpreter>/root/.nvm/versions/node/v5.12.0/bin/node</node-interpreter>
+    <node-options />
+    <working-directory>$PROJECT_DIR$</working-directory>
+    <pass-parent-env>true</pass-parent-env>
+    <envs />
+    <ui>bdd</ui>
+    <extra-mocha-options>--compilers js:babel-register --recursive --require ./test/setup.js</extra-mocha-options>
+    <test-kind>DIRECTORY</test-kind>
+    <test-directory />
+    <recursive>false</recursive>
+    <method />
+  </configuration>
+</component>
