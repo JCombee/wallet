@@ -3,20 +3,41 @@ import Promise from 'es6-promise';
 import { createReadWriteLock } from 'locks';
 
 class EventQueueRepository {
-  constructor (config) {
-    this._Datastore = new Datastore(config);
-    this._Promise = Promise;
-    this._rwlock = createReadWriteLock();
+  constructor(config) {
+    this.config = Object.assign({
+      dependencies: {
+        _database: new Datastore(),
+        _Promise: Promise,
+        _rwlock: createReadWriteLock()
+      }
+    }, config);
   }
 
-  insert (event, payload) {
-    return new this._Promise((resolve, reject) => {
-      return this._rwlock.writeLock((rwlock) => {
-        this._Datastore.insert({ event, payload }, (err, record) => {
+  insert(event, payload) {
+    const { _Promise, _rwlock, _database } = this.config.dependencies;
+    return new _Promise((resolve, reject) => {
+      _rwlock.writeLock(() => {
+        _database.insert({ event, payload }, (err, record) => {
           if (err) {
             return reject();
           }
-          rwlock.unlock();
+          _rwlock.unlock();
+          resolve(record);
+        });
+      });
+    });
+  }
+
+  next() {
+    const { _Promise, _rwlock, _database } = this.config.dependencies;
+    return new _Promise((resolve, reject) => {
+      _rwlock.readLock(() => {
+        _database.find({}, (err, records) => {
+          if (err) {
+            return reject();
+          }
+          const record = Object.assign({}, records[0]);
+          _rwlock.unlock();
           resolve(record);
         });
       });
@@ -25,4 +46,4 @@ class EventQueueRepository {
 
 }
 
-export default EventQueueRepository
+export default EventQueueRepository;

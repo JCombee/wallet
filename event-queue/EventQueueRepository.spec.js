@@ -2,37 +2,56 @@
 import { expect } from 'chai';
 import EventQueueRepository from './EventQueueRepository';
 
+const mochaAsync = (fn) => async (done) => {
+  try {
+    await fn();
+    done();
+  } catch (err) {
+    done(err);
+  }
+};
+
 describe('event queue repository', () => {
-  it('persits a dispatched event', () => {
+  it('runs a happy flow', mochaAsync(async () => {
     const eq = new EventQueueRepository();
 
-    let i = 0;
-    eq._Promise = function (callback) {
-      callback(() => {
-        expect(i++).to.be.equal(2)
+    await eq.insert('RedEvent', { green: 'Blue' });
+
+    const assertRecord = await eq.next();
+
+    expect(assertRecord).to.have.property('event', 'RedEvent');
+    expect(assertRecord).to.have.deep.property('payload.green', 'Blue');
+  }));
+
+  describe('insert', () => {
+    it('persits a dispatched event', mochaAsync(async () => {
+      const eq = new EventQueueRepository();
+
+      await eq.insert('FooEvent', { foo: 'bar' });
+
+      const assertRecord = await new Promise((resolve1) => {
+        eq.config.dependencies._database.find({}, (r, a) => resolve1(a));
       });
-    };
 
-    let assertRecord;
-    eq._Datastore = {
-      insert: (record, callback)=> {
-        assertRecord = record;
-        expect(i++).to.be.equal(0)
-        callback(null, record);
-      }
-    };
+      expect(assertRecord).to.be.a('array');
+      expect(assertRecord).to.have.length(1);
+      expect(assertRecord[0]).to.have.property('event', 'FooEvent');
+      expect(assertRecord[0]).to.have.deep.property('payload.foo', 'bar');
+    }));
+  });
 
-    eq._rwlock = {
-      writeLock: (callback) => {
-        callback(eq._rwlock);
-      },
-      unlock: () => {
-        expect(i++).to.be.equal(1)
-      }
-    };
+  describe('next', () => {
+    it('retrives the next best event', mochaAsync(async () => {
+      const eq = new EventQueueRepository();
 
-    expect(assertRecord.foo).to.be.equals
-    eq.insert('FooEvent', { foo: 'bar' });
-    // expect(assertRecord).to.be.equal() // equals to the emmited event {event;'FooEvent', payload: {foo:'bar'}
+      await new Promise((resolve) => {
+        const insertRecord = { event: 'AlphaEvent', payload: { bravo: 'Charlie' } };
+        eq.config.dependencies._database.insert(insertRecord, () => resolve());
+      });
+
+      const assertRecord = await eq.next();
+      expect(assertRecord).to.have.property('event', 'AlphaEvent');
+      expect(assertRecord).to.have.deep.property('payload.bravo', 'Charlie');
+    }));
   });
 });
