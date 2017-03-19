@@ -9,13 +9,13 @@ describe('event queue', () => {
     };
     const callback = eq.subscribe('EventFoo', FooEvent);
     expect(callback).to.be.equal(FooEvent);
-    expect(eq._listeners.EventFoo[ 0 ]).to.be.equal(FooEvent);
+    expect(eq._listeners.EventFoo[0]).to.be.equal(FooEvent);
   });
 
   it('dispatches an event', () => {
     const eq = new EventQueue();
     const FooEvent = (payload) => {
-      expect(payload.foo).to.be.equal('bar')
+      expect(payload.foo).to.be.equal('bar');
     };
     const callback = eq.subscribe('EventFoo', FooEvent);
     eq.dispatch('EventFoo', { foo: 'bar' });

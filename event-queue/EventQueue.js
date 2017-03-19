@@ -1,28 +1,28 @@
-import EventQueueRepository from './EventQueueRepository'
+import EventQueueRepository from './EventQueueRepository';
 
 class EventQueue {
-  constructor () {
+  constructor() {
     this._listeners = {};
     this._repository = new EventQueueRepository();
   }
 
-  subscribe (key, callback) {
-    if (this._listeners[ key ]) {
-      this._listeners[ key ].append(callback);
+  subscribe(key, callback) {
+    if (this._listeners[key]) {
+      this._listeners[key].append(callback);
       return callback;
     }
-    this._listeners[ key ] = [ callback ];
+    this._listeners[key] = [callback];
     return callback;
   }
 
-  dispatch (key, payload) {
-    if (this._listeners[ key ]) {
+  dispatch(key, payload) {
+    if (this._listeners[key]) {
       // this._listeners[ key ].forEach(callback => callback(payload));
       this._repository.insert(key, payload);
-      return
+      return;
     }
     console.warn(`There are no listeners for "${key}"`);
   }
 }
 
-export default EventQueue
+export default EventQueue;

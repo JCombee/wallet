@@ -1,5 +1,5 @@
-import EventQueueService from './EventQueueService';
+import EventQueue from './EventQueue';
 
 export function createEventQueue() {
-  return EventQueueService.createEventQueue();
+  return new EventQueue();
 }
